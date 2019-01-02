@@ -23,7 +23,7 @@ public class Main {
 		ss = new ServerSocket(8888);
 	}
 
-	public void run() throws IOException {
+	public void run() {
 
 		while (isActive) {
 
@@ -51,7 +51,7 @@ public class Main {
 		}
 	}
 
-	public void activate() throws IOException {
+	public void activate() {
 
 		if (!isActive) {
 			this.isActive = true;
@@ -71,7 +71,19 @@ public class Main {
 	}
 
 	private void write(PrintStream ps, String response) {
-
+		if (ps != null) 
+		{
+			ps.println();
+			ps.println( "<!DOCTYPE html>\n" + 
+						"<form action=\"upload.php\" method=\"POST\" enctype=\"multipart/form-data\">\n" + 
+						"Select file to upload:\n" +
+						"<input type=\"file\" name=\"fileToUpload\" id=\"fileToUpload\">\n" +
+						"<input type=\"submit\" value=\"Upload File\" name=\"submit\">\n" +
+						"</form>" +
+					"<h2>" + (response == null || response.trim().isEmpty() ? "" : response) + "</h2>" +
+					"</body>\n" + 
+					"</html>");
+		}
 	}
 
 	private String read(PrintStream ps, BufferedInputStream bis) throws IOException {
@@ -101,6 +113,7 @@ public class Main {
 
 		String firstHeader = request.split("\n")[0];
 		String type = firstHeader.split(" ")[0];
+		System.out.println(firstHeader);
 		String uri = firstHeader.split(" ")[1];
 		this.file = uri.substring(1);
 
@@ -120,7 +133,7 @@ public class Main {
 		return null;
 	}
 
-	private String get(PrintStream ps, String typeOfExtension) {
+	private String get(PrintStream ps, String typeOfExtension) throws IOException {
 		ps.println("HTTP/1.1 200 OK");
 		ps.println();
 
@@ -153,6 +166,8 @@ public class Main {
 						+ "<body>\n" + "<form action=\"/action_page.php\">\n"
 						+ "			  <input type=\"file\" name=\"pic\" accept=\"image/*\">\n"
 						+ "			  <input type=\"submit\">\n" + "			</form> " + "</body>\n" + "</html>");
+				
+				ps.println("Da ti eba maikata kuha!!!");
 			}
 		}
 
